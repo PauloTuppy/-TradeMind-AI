@@ -1,0 +1,1 @@
+  return React.createElement(CandlestickChart, { data: prices });

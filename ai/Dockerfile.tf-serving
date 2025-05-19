@@ -1,0 +1,37 @@
+FROM tensorflow/serving:2.11.0
+
+# Copy model files
+COPY models/ /models/crypto-lstm/1
+
+# Set environment variables
+ENV MODEL_NAME=crypto-lstm
+ENV MODEL_BASE_PATH=/models
+ENV TF_CPP_MIN_LOG_LEVEL=2
+
+# Configure batching parameters for better performance
+ENV TF_ENABLE_BATCHING=true
+ENV TF_BATCH_SIZE=32
+ENV TF_BATCH_TIMEOUT_MICROS=10000
+
+# Configure resource utilization
+ENV TF_PER_PROCESS_GPU_MEMORY_FRACTION=0.5
+ENV TF_FORCE_GPU_ALLOW_GROWTH=true
+
+# Expose ports for gRPC and REST API
+EXPOSE 8500 8501
+
+# Health check
+HEALTHCHECK --interval=5s --timeout=5s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8501/v1/models/crypto-lstm || exit 1
+
+# Set user to non-root for security
+USER 1000
+
+# Start TensorFlow Serving
+CMD ["tensorflow_model_server", \
+     "--port=8500", \
+     "--rest_api_port=8501", \
+     "--model_name=${MODEL_NAME}", \
+     "--model_base_path=${MODEL_BASE_PATH}/${MODEL_NAME}", \
+     "--enable_batching=true", \
+     "--file_system_poll_wait_seconds=60"]
