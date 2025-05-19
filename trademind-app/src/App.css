@@ -1,0 +1,25 @@
+.App {
+  text-align: center;
+  padding: 20px;
+}
+
+.candlestick-chart {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.chart-container {
+  margin-top: 20px;
+}
+
+.candle {
+  padding: 10px;
+  margin: 5px 0;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
